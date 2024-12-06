@@ -1,7 +1,7 @@
 locals {
 	tags = {
-		Name = "Codio Terraform Demo"
+		Name = "Summafy - IaC 1"
 	}
-	database = "wordpress"
-	user = "wordpress_user"
+	database = "summafy"
+	user = "summafy_user"
 }
