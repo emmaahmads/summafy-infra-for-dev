@@ -13,7 +13,7 @@ data "aws_ami" "docker-host" {
 	most_recent = true
 	filter {
 		name = "name"
-		values = ["docker-host image 2"]
+		values = ["docker-host-image"]
 	}
 	owners = ["975050042748"] # emmaahmads
 }
@@ -23,6 +23,7 @@ resource "aws_instance" "docker-engine" {
 	ami = data.aws_ami.docker-host.id
 	instance_type = "t2.micro"
     key_name = "docker-engine"
+ 	iam_instance_profile = "docker-host-pull-images-ecr"
  #   user_data = file("${path.module}/files/install_docker.sh")
 	tags = {
 		Name = format("docker-host %s", local.tags.Name) 
@@ -51,11 +52,11 @@ resource "aws_security_group" "summafy-docker-engine" {
 		cidr_blocks = ["0.0.0.0/0"]
 	}
 	ingress {
-		description = "ssh from Everywhere"
+		description = "SSH only from summafy cli-host"
 		from_port = 22
 		to_port = 22
 		protocol = "tcp"
-		cidr_blocks = ["0.0.0.0/0"]
+		security_groups = [aws_security_group.summafy-cli-host.id]
 	}
 	egress {
 		from_port = 0

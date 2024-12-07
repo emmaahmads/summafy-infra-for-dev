@@ -21,9 +21,6 @@ echo "EMMA Install CLI 5"
 #check version
 aws --version
 
-sudo apt install -y postgresql-common
-sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-
 sudo apt install -y curl ca-certificates
 sudo install -d /usr/share/postgresql-common/pgdg
 sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc

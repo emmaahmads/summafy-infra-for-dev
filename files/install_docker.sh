@@ -28,6 +28,20 @@ sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plug
 # Verify installation
 sudo docker run hello-world
 
+echo "EMMA Install CLI 1"
+#install AWS CLI
+sudo apt update  -y
+sudo apt upgrade -y
+echo "EMMA Install CLI 2"
+sudo apt install unzip -y
+echo "EMMA Install CLI 3"
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+echo "EMMA Install CLI 4"
+sudo ./aws/install
+echo "EMMA Install CLI 5"
+#check version
+aws --version
 sudo apt install -y curl ca-certificates
 sudo install -d /usr/share/postgresql-common/pgdg
 sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc

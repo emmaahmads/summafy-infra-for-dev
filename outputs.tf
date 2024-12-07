@@ -19,3 +19,8 @@ output "docker-ip" {
 output "rds-endpoint" {
     value = module.database.db_instance_endpoint #aws_db_instance.summafy-database.endpoint
 }
+
+output "summary-container-repo" {
+	value = aws_ecr_repository.summafy.repository_url
+}
+ 

@@ -2,7 +2,7 @@ data "aws_ami" "cli-host" {
 	most_recent = true
 	filter {
 		name = "name"
-		values = ["cli-host image"]
+		values = ["cli-host-image"]
 	}
 	owners = ["975050042748"] # emmaahmads
 }
