@@ -10,7 +10,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "main" {
 	vpc_id = aws_vpc.main.id
 	cidr_block = "10.0.1.0/24"
-	availability_zone = "us-east-1c"
+	availability_zone = "us-east-1d"
 	map_public_ip_on_launch = true
 	tags = local.tags
 }
@@ -25,13 +25,24 @@ resource "aws_subnet" "second" {
 }
 
 ## create second subnet inside vpc
-resource "aws_subnet" "private" {
+resource "aws_subnet" "private-main" {
 	vpc_id = aws_vpc.main.id
 	cidr_block = "10.0.3.0/24"
 	availability_zone = "us-east-1c"
 	map_public_ip_on_launch = false
 	tags = {
-		Name = format("%s Private Subnet", local.tags.Name) 
+		Name = format("%s Private Subnet 1", local.tags.Name) 
+	}
+}
+
+## create second subnet inside vpc
+resource "aws_subnet" "private-second" {
+	vpc_id = aws_vpc.main.id
+	cidr_block = "10.0.4.0/24"
+	availability_zone = "us-east-1e"
+	map_public_ip_on_launch = false
+	tags = {
+		Name = format("%s Private Subnet 2", local.tags.Name) 
 	}
 }
 
@@ -54,4 +65,22 @@ resource "aws_route_table" "crt" {
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.crt.id
+}
+
+## private route table
+resource "aws_route_table" "prvt_rt" {
+  vpc_id = "${aws_vpc.main.id}"
+  tags = {
+	Name = "Private route table"
+  }
+}
+
+resource "aws_route_table_association" "b" {
+  subnet_id      = aws_subnet.private-main.id
+  route_table_id = aws_route_table.prvt_rt.id
+}
+
+resource "aws_route_table_association" "c" {
+  subnet_id      = aws_subnet.private-second.id
+  route_table_id = aws_route_table.prvt_rt.id
 }

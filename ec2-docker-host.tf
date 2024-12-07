@@ -9,27 +9,24 @@
 # 	# }
 # }
 
-# get latest 22.04 ubuntu Canonical AMI image
-data "aws_ami" "ubuntu" {
+data "aws_ami" "docker-host" {
 	most_recent = true
 	filter {
 		name = "name"
-		values = ["ubuntu/images/hvm-ssd/ubuntu-*-22.04-amd64-server-*"]
+		values = ["docker-host image 2"]
 	}
-	filter {
-		name = "virtualization-type"
-		values = ["hvm"]
-	}
-	owners = ["099720109477"] # Canonical
+	owners = ["975050042748"] # emmaahmads
 }
  
 # create an instance
 resource "aws_instance" "docker-engine" {
-	ami = data.aws_ami.ubuntu.id
+	ami = data.aws_ami.docker-host.id
 	instance_type = "t2.micro"
     key_name = "docker-engine"
-    user_data = file("${path.module}/files/install_docker.sh")
-	tags = local.tags
+ #   user_data = file("${path.module}/files/install_docker.sh")
+	tags = {
+		Name = format("docker-host %s", local.tags.Name) 
+	}
 	subnet_id = aws_subnet.main.id
 	vpc_security_group_ids = [aws_security_group.summafy-docker-engine.id]
 	associate_public_ip_address = true
@@ -69,3 +66,8 @@ resource "aws_security_group" "summafy-docker-engine" {
 	}
 	tags = local.tags
 }
+
+# resource "aws_security_group_rule" "ec2_to_db" {
+# 	type = "ingress"
+# 	from_port = 514
+# }
