@@ -27,7 +27,7 @@ module "database" {
 
 # create security group for database access
 resource "aws_security_group" "database" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	name = "allow database connection"
 	ingress {
 		description = "Postgres from cli-host and docker-engine"

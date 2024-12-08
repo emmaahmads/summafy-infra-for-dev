@@ -31,7 +31,7 @@ resource "aws_instance" "cli-host" {
 
 # create security group for aws access
 resource "aws_security_group" "summafy-cli-host" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	name = "allow cli-host instance connection"
 	ingress {
 		description = "ssh from Everywhere"

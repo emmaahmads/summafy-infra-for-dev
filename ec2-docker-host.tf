@@ -42,7 +42,7 @@ resource "aws_instance" "docker-engine" {
 
 # create security group for aws access
 resource "aws_security_group" "summafy-docker-engine" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	name = "allow docker-engine instance connection"
 	ingress {
 		description = "HTTP from Everywhere"

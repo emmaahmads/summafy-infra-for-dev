@@ -1,14 +1,24 @@
-## create a VPC
-resource "aws_vpc" "main" {
-	cidr_block = "10.0.0.0/16"
-	tags = local.tags
-	enable_dns_support = true
-	enable_dns_hostnames = true
+# ## Retrieve an existing VPC data
+# data "aws_vpc" "vpc" {
+#   filter {
+#     name   = "tag:Name"
+#     values = [local.tags.Name]
+#   }
+# }
+
+## Create a VPC if it does not exist
+resource "aws_vpc" "summafy_vpc" {
+  cidr_block                       = "10.0.0.0/16"
+  enable_dns_support               = true
+  enable_dns_hostnames             = true
+ # count                            = data.aws_vpc.vpc.id == "" ? 1 : 0
+  tags                             = local.tags
+ # id = data.aws_vpc.vpc.id == "" ? "" : data.aws_vpc.vpc.id
 }
 
 ## create subnet inside vpc
 resource "aws_subnet" "main" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	cidr_block = "10.0.1.0/24"
 	availability_zone = "us-east-1d"
 	map_public_ip_on_launch = true
@@ -17,7 +27,7 @@ resource "aws_subnet" "main" {
 
 ## create second subnet inside vpc
 resource "aws_subnet" "second" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	cidr_block = "10.0.2.0/24"
 	availability_zone = "us-east-1e"
 	map_public_ip_on_launch = true
@@ -26,7 +36,7 @@ resource "aws_subnet" "second" {
 
 ## create second subnet inside vpc
 resource "aws_subnet" "private-main" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	cidr_block = "10.0.3.0/24"
 	availability_zone = "us-east-1c"
 	map_public_ip_on_launch = false
@@ -37,7 +47,7 @@ resource "aws_subnet" "private-main" {
 
 ## create second subnet inside vpc
 resource "aws_subnet" "private-second" {
-	vpc_id = aws_vpc.main.id
+	vpc_id = aws_vpc.summafy_vpc.id
 	cidr_block = "10.0.4.0/24"
 	availability_zone = "us-east-1e"
 	map_public_ip_on_launch = false
@@ -48,13 +58,13 @@ resource "aws_subnet" "private-second" {
 
 ## Add internet gateway for outside access
 resource "aws_internet_gateway" "igw" {
-	vpc_id = "${aws_vpc.main.id}"
+	vpc_id = "${aws_vpc.summafy_vpc.id}"
 	tags = local.tags
 }
 
 ## create routing table for external access
 resource "aws_route_table" "crt" {
-	vpc_id = "${aws_vpc.main.id}"
+	vpc_id = "${aws_vpc.summafy_vpc.id}"
 	route {
 		cidr_block = "0.0.0.0/0"
 		gateway_id = "${aws_internet_gateway.igw.id}"
@@ -69,7 +79,7 @@ resource "aws_route_table_association" "a" {
 
 ## private route table
 resource "aws_route_table" "prvt_rt" {
-  vpc_id = "${aws_vpc.main.id}"
+  vpc_id = "${aws_vpc.summafy_vpc.id}"
   tags = {
 	Name = "Private route table"
   }
