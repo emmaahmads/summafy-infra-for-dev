@@ -56,6 +56,7 @@ resource "aws_security_group" "summafy-docker-engine" {
 		from_port = 22
 		to_port = 22
 		protocol = "tcp"
+		# sg to sg will require to ssh using private ip
 		security_groups = [aws_security_group.summafy-cli-host.id]
 	}
 	egress {
@@ -66,6 +67,9 @@ resource "aws_security_group" "summafy-docker-engine" {
 		ipv6_cidr_blocks = ["::/0"]
 	}
 	tags = local.tags
+	depends_on = [
+		aws_security_group.summafy-cli-host
+	]
 }
 
 # resource "aws_security_group_rule" "ec2_to_db" {
