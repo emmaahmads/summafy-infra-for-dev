@@ -8,7 +8,6 @@ module "database" {
     engine_version    = "17"
 	allocated_storage = 5
 	instance_class = "db.t3.micro"
-  #  template = "free_tier"
 	db_name = "summafy"
 	username = "summafy_user"
 	password = "happyboys123"
@@ -20,7 +19,7 @@ module "database" {
 	vpc_security_group_ids = [aws_security_group.database.id]
 	apply_immediately = true
 	skip_final_snapshot = true
-	deletion_protection = false
+	deletion_protection = true
 	enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
     create_cloudwatch_log_group     = true
 	tags = local.tags

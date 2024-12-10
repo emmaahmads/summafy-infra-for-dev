@@ -1,19 +1,8 @@
-# ## Retrieve an existing VPC data
-# data "aws_vpc" "vpc" {
-#   filter {
-#     name   = "tag:Name"
-#     values = [local.tags.Name]
-#   }
-# }
-
-## Create a VPC if it does not exist
 resource "aws_vpc" "summafy_vpc" {
   cidr_block                       = "10.0.0.0/16"
   enable_dns_support               = true
   enable_dns_hostnames             = true
- # count                            = data.aws_vpc.vpc.id == "" ? 1 : 0
   tags                             = local.tags
- # id = data.aws_vpc.vpc.id == "" ? "" : data.aws_vpc.vpc.id
 }
 
 ## create subnet inside vpc
@@ -69,11 +58,18 @@ resource "aws_route_table" "crt" {
 		cidr_block = "0.0.0.0/0"
 		gateway_id = "${aws_internet_gateway.igw.id}"
 	}
-	tags = local.tags
+	tags = {
+		Name = format("My RT : %s", local.tags.Name) 
+	}
 }
 
-resource "aws_route_table_association" "a" {
+resource "aws_route_table_association" "main" {
   subnet_id      = aws_subnet.main.id
+  route_table_id = aws_route_table.crt.id
+}
+
+resource "aws_route_table_association" "second" {
+  subnet_id      = aws_subnet.second.id
   route_table_id = aws_route_table.crt.id
 }
 
@@ -85,12 +81,12 @@ resource "aws_route_table" "prvt_rt" {
   }
 }
 
-resource "aws_route_table_association" "b" {
+resource "aws_route_table_association" "private-main" {
   subnet_id      = aws_subnet.private-main.id
   route_table_id = aws_route_table.prvt_rt.id
 }
 
-resource "aws_route_table_association" "c" {
+resource "aws_route_table_association" "private-second" {
   subnet_id      = aws_subnet.private-second.id
   route_table_id = aws_route_table.prvt_rt.id
 }
