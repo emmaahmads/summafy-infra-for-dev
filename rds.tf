@@ -2,6 +2,7 @@
 module "database" {
 	source = "terraform-aws-modules/rds/aws"
 	version = ">= 5.6.0, < 6.0.0"
+	create_random_password = false
 	identifier = "summafy-database"
 	engine = "postgres"
     engine_version    = "17"
