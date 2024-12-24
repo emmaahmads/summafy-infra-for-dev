@@ -1,19 +1,19 @@
-data "aws_ami" "cli-host" {
+/*data "aws_ami" "cli-host" {
 	most_recent = true
 	filter {
 		name = "name"
 		values = ["cli-host-image"]
 	}
 	owners = ["975050042748"] # emmaahmads
-}
+}*/
 
 # create an instance
 resource "aws_instance" "cli-host" {
-	ami = data.aws_ami.cli-host.id
+	ami = "ami-0e2c8caa4b6378d8c" #data.aws_ami.cli-host.id
 	instance_type = "t2.micro"
-    key_name = "cli-host"
+        key_name = "cli-host"
 	iam_instance_profile = "cli-host"
- #   user_data = file("${path.module}/files/install_cli.sh")
+         user_data = file("${path.module}/files/install_cli.sh")
 	tags = {
 		Name = format("cli-host %s", local.tags.Name) 
 	}

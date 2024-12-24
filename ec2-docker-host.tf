@@ -9,22 +9,22 @@
 # 	# }
 # }
 
-data "aws_ami" "docker-host" {
+/*data "aws_ami" "docker-host" {
 	most_recent = true
 	filter {
 		name = "name"
 		values = ["docker-host-image"]
 	}
 	owners = ["975050042748"] # emmaahmads
-}
+}*/
  
 # create an instance
 resource "aws_instance" "docker-engine" {
-	ami = data.aws_ami.docker-host.id
+	ami = "ami-0e2c8caa4b6378d8c" # data.aws_ami.docker-host.id
 	instance_type = "t2.micro"
-    key_name = "docker-engine"
- 	iam_instance_profile = "docker-host-pull-images-ecr"
- #   user_data = file("${path.module}/files/install_docker.sh")
+        key_name = "docker-host"
+ 	iam_instance_profile = "docker-host"
+         user_data = file("${path.module}/files/install_docker.sh")
 	tags = {
 		Name = format("docker-host %s", local.tags.Name) 
 	}
