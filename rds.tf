@@ -10,7 +10,7 @@ module "database" {
 	instance_class = "db.t3.micro"
 	db_name = "summafy"
 	username = "summafy_user"
-	password = "happyboys123"
+	password = ""
 	port     = "5432"
 	family = "postgres17"
 	create_db_subnet_group = true
